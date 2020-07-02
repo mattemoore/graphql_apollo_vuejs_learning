@@ -4,7 +4,11 @@ Let's learn the fundamentals of Vue, GraphQL and Apollo in a simple app.
 
 ## Project setup
 ```
-npm install
+In one terminal:
+`cd client && npm install && npm run serve`
+
+In another terminal:
+`cd server && npm install && npm run serve`
 ```
 
 ### Compiles and hot-reloads for development
