@@ -1,13 +1,17 @@
 <template>
   <div>
     <h1>Querying GraphQL via Apollo in VueJS</h1>
-    <h2>{{ msg }} {{ artists }} queries are: {{this.$apollo.queries}}</h2>
+    <h2>{{ msg }}</h2>
+
     <ApolloQuery :query="this.apollo.artists.query">
-      <template v-slot="{ result: { loading, error, data } }">
-        <div v-if="loading" class="loading apollo">Loading...</div>
-        <div v-else-if="error" class="error apollo">An error occurred</div>
-        <div v-else-if="data" class="result apollo">{{ data.artists }}</div>
-        <div v-else class="no-result apollo">No result :(</div>
+      <template v-slot="{ result: { data } }">
+        <div v-if="data" class="result apollo">
+          <ul style="list-style-type: none;">
+            <li v-for="artist in data.artists" v-bind:key="artist.id">
+              <div>{{ artist.name }}</div>
+            </li>
+          </ul>
+        </div>
       </template>
     </ApolloQuery>
   </div>
@@ -16,7 +20,6 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import gql from "graphql-tag";
-import register from "../hooks";
 
 @Component
 export default class Test extends Vue {
@@ -24,11 +27,18 @@ export default class Test extends Vue {
   get apollo () {
     return {
       artists: {
-        query: gql`{artists {name}}`,
-        prefetch: true
+        query: gql`{artists {name id}}`
+      },
+      albums: {
+        query: gql`query getAlbums($id: ID!) { albums(albumID: $id) {title}}`
       }
     }
   }
-  artists: string[] = ["foo"];
+  showAlbums(artistId: string) {
+    console.log(artistId);
+  }
 }
+
+
+
 </script>
